@@ -3,31 +3,31 @@ import java.util.Random;         // imports go here
 import java.util.Scanner;
 
 
-//TODO .... add Uprisimng
 //TODO .... if the input is greater than the amount owned
 //TODO .... stats for ur game
-//TODO ... new citizens
 
 
 
 public class EthansHammurabi {         // must save in a file named Hammurabi.java
-    static Random random = new Random();
-    static Scanner scanner = new Scanner(System.in);
-    private static int bushels = 2800;
-    private static int userBushelInput;
-    private static int acres = 1000;
-    private static int userAcresInput;
-    private static int userPlantingInput;
-    private static int years = 1;
-    private static int totalCitizens = 100;
-    private static int newCitizens;
-    private static int ratsTotalConsumption;
-    private static int peopleThatHaveStarvedToDeath;
-    private static int costOfAcres = 19;
-    private static int totalBushelsYield;
-    private static int totalPeopleThatHaveDied;
-    private static int totalPeopleThatCameYourCity = 100;
-    private static int peopleDiedFromDisease;
+    public static Random random = new Random();
+    public static Scanner scanner = new Scanner(System.in);
+    public static int bushels = 2800;
+    public static int userBushelInput;
+    public static int acres = 1000;
+    public static int userAcresInput;
+    public static int userPlantingInput;
+    public static int years = 1;
+    public static int totalCitizens = 100;
+    public static int newCitizens;
+    public static int ratsTotalConsumption;
+    public static int peopleThatHaveStarvedToDeath;
+    public static int costOfAcres = 19;
+    public static int totalBushelsYield;
+    public static int totalPeopleThatHaveDied;
+    public static int totalPeopleThatCameYourCity = 100;
+    public static int peopleDiedFromDisease;
+    public static boolean youHaveBeenExiled;
+
     public static void main(String[] args) {
         while (true) {
             if (toPlay().equals("no")) {
@@ -70,6 +70,7 @@ public class EthansHammurabi {         // must save in a file named Hammurabi.ja
             }
         }
     }
+    
 
     public static void rules(){
         System.out.println("Congratulations, you are the newest ruler of ancient Sumer, elected for a ten year term of office. " +
@@ -225,6 +226,7 @@ public class EthansHammurabi {         // must save in a file named Hammurabi.ja
     }
     public static void youHaveBeenExiled(){
         System.out.println("You let too many people starve to death! You are now exiled!");
+        years = 11;
         endTheGame();
     }
 
