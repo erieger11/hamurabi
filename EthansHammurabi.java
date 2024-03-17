@@ -3,9 +3,10 @@ import java.util.Random;         // imports go here
 import java.util.Scanner;
 
 
-//TODO .... Need to fix the cost of acres on the on the first year to 19
-//TODO .... need to upadte the rats and harvesting after the first year
-//TODO .... need to chage if the acres are 0 that u cant plant land and must buy land
+//TODO .... add Uprisimng
+//TODO .... if the input is greater than the amount owned
+//TODO .... stats for ur game
+//TODO ... new citizens
 
 
 
@@ -16,16 +17,17 @@ public class EthansHammurabi {         // must save in a file named Hammurabi.ja
     private static int userBushelInput;
     private static int acres = 1000;
     private static int userAcresInput;
-    private static int planting;
     private static int userPlantingInput;
     private static int years = 1;
     private static int totalCitizens = 100;
     private static int newCitizens;
     private static int ratsTotalConsumption;
-    private static int randomCost;
-    private static int starvingPeople;
+    private static int peopleThatHaveStarvedToDeath;
     private static int costOfAcres = 19;
     private static int totalBushelsYield;
+    private static int totalPeopleThatHaveDied;
+    private static int totalPeopleThatCameYourCity = 100;
+    private static int peopleDiedFromDisease;
     public static void main(String[] args) {
         while (true) {
             if (toPlay().equals("no")) {
@@ -40,20 +42,26 @@ public class EthansHammurabi {         // must save in a file named Hammurabi.ja
             }
             while(years < 11) {
                 System.out.println("It's year : " + years);
-                calculatingAcresCost();
+
                 acresInput();
                 feedingInput();
                 plantingInput();
+
+
+                proceedingInputs();
                 starvedToDeath();
                 plantingFood();
-                calculatingAcresCost();
-                proceedingInputs();
-                disease();
+
                 starvedToDeath();
+
+                calculatingAcresCost();
+                disease();
+
                 ratsConsumption();
                 newCitizens();
 
-                //uprsing
+                uprising();
+
 
                 years++;
             }
@@ -61,11 +69,6 @@ public class EthansHammurabi {         // must save in a file named Hammurabi.ja
                 theGameHasFinished();
             }
         }
-    }
-
-    public static String toPlay() {
-        System.out.println("Do you want to play? Yes/No");
-        return scanner.next().toLowerCase();
     }
 
     public static void rules(){
@@ -83,19 +86,25 @@ public class EthansHammurabi {         // must save in a file named Hammurabi.ja
     }
 
 
-    //input methods
+
+
+
+    //SCANNERS
+    public static String toPlay() {
+        System.out.println("Do you want to play? Yes/No");
+        return scanner.next().toLowerCase();
+    }
     public static String readyToPlay() {
         System.out.println("Are you ready to play? Yes/No");
         return scanner.next().toLowerCase();
     }
-
     public static void acresInput() {
         System.out.println("The city has a total of " + bushels + " bushels. The acres produced " + totalBushelsYield + " bushels.");
-        System.out.println(starvingPeople + " have starved to death.");
+        System.out.println( peopleThatHaveStarvedToDeath + " have starved to death.");
         System.out.println("The rats ate " + ratsTotalConsumption +" bushels.");
         System.out.println("The city owns " + acres + " acres.");
-        System.out.println("There are a total of " + totalCitizens + " citizens." + newCitizens + " new citizens came into the city.");
-        System.out.println("The cost of acres is " + randomCost + " bushels.");
+        System.out.println("There are a total of " + totalCitizens + " citizens. " + newCitizens + " new citizens came into the city.");
+        System.out.println("The cost of acres is " + costOfAcres + " bushels.");
         System.out.println(" ");
         System.out.println("How many acres would you like to buy or sell? (negative number to sell)");
         userAcresInput = scanner.nextInt();
@@ -112,68 +121,95 @@ public class EthansHammurabi {         // must save in a file named Hammurabi.ja
     public static void proceedingInputs(){
         acres += userAcresInput;
         bushels -= userBushelInput;
-        bushels -= userPlantingInput;
+        bushels -= userPlantingInput * 2;
+        totalPeopleThatHaveDied += peopleThatHaveStarvedToDeath + peopleDiedFromDisease;
     }
-    public static void newCitizens(){
-        if(years>=1){
-            newCitizens += (20 * acres  + bushels) / (100 * totalCitizens) + 1;
+
+    public static void newCitizens() {
+        if (years >= 1) {
+            if (peopleThatHaveStarvedToDeath <= 10) {
+                newCitizens = (20 * acres + bushels) / (100 * totalCitizens) + 1;
+            }
+            totalCitizens += newCitizens;
+        }totalPeopleThatCameYourCity += newCitizens;
+    }
+
+
+
+    public static void calculatingAcresCost(){
+        if (years >= 1 ) {
+            costOfAcres = random.nextInt(24-17) + 17;
+            if(userAcresInput<0){
+                bushels += costOfAcres * (userAcresInput * -1);
+            }
+            else {
+                bushels -= userAcresInput * costOfAcres;
+            }
         }
-        totalCitizens += newCitizens;
+    }
+
+    public static void plantingFood(){
+        bushels -= userPlantingInput * 2;
+        if(years >= 1){
+            int harvestYield =  random.nextInt(6) + 1;
+            totalBushelsYield = harvestYield * userPlantingInput;
+            bushels += totalBushelsYield;
+        }
+    }
+
+
+
+
+
+    ///  BAD THINGS
+    public static void starvedToDeath(){
+        if(years>=1) {
+            int starvingPeople;
+            int foodTotalNeeded = totalCitizens * 20;
+            int remainingFood = foodTotalNeeded - userBushelInput;
+
+            if (foodTotalNeeded <= userBushelInput) {
+                starvingPeople = 0;
+            } else if (foodTotalNeeded > userBushelInput) {
+                for (int i = remainingFood; i % 20 != 0; i++) {
+                    remainingFood++;
+                }
+                starvingPeople = remainingFood / 20;
+                peopleThatHaveStarvedToDeath = starvingPeople;
+                totalCitizens -= starvingPeople;
+            }
+        }
     }
     public static void ratsConsumption() {
         if (years >= 1) {
-            if (bushels > 400) {
-                 ratsTotalConsumption += random.nextInt(201);
+            int ratInvasion = random.nextInt(100)+1;
+            if (ratInvasion < 41) {
+                double ratsRandomConsumption = random.nextDouble()* 0.30;
+                ratsTotalConsumption += (int) (bushels * ratsRandomConsumption);
             }
         }
         bushels -= ratsTotalConsumption;
     }
 
-    public static void starvedToDeath(){
-        if(years>=1) {
-            int foodTotalNeeded = totalCitizens * 20;
-            int remainingFood =  foodTotalNeeded - userBushelInput;
-
-            if( foodTotalNeeded == userBushelInput ){
-                starvingPeople = 0;
-
-
-            } else if(foodTotalNeeded > userBushelInput) {
-                for (int i = remainingFood; i % 20 != 0; i++){
-                    remainingFood++;
-                }
-                starvingPeople = remainingFood/20;
-
-            }else {
-                starvingPeople = 0;
-
-            }
-        }
-    }
-
-
-    public static void calculatingAcresCost(){
-        if (years >=1 ) {
-            randomCost = random.nextInt(24-17) + 17;
-            costOfAcres = userAcresInput * randomCost;
-            bushels -= costOfAcres;
-        }
-    }
-    public static void plantingFood(){
-        if(years >= 1){
-            int harvestYield =  random.nextInt(6) + 1;
-            totalBushelsYield = harvestYield * userPlantingInput;
-            totalBushelsYield -= userPlantingInput * 2;
-            bushels += totalBushelsYield;
-        }
-    }
     public static void disease(){
         int diseaseProbability = random.nextInt(100)+1;
         if(years>=1)
             if(diseaseProbability < 16){
-            Math.round(totalCitizens /= 2);
+            peopleDiedFromDisease = Math.round(totalCitizens /= 2);
+            System.out.println("Oh no! A horrible disease has struck. You lost 50% of your population");
         }
     }
+    public static void uprising(){
+        double uprisingLimit = totalCitizens * .45;
+        if(peopleThatHaveStarvedToDeath >= uprisingLimit){
+            youHaveBeenExiled();
+        }
+    }
+
+
+
+
+
 
 
     //end game methods
@@ -181,9 +217,15 @@ public class EthansHammurabi {         // must save in a file named Hammurabi.ja
         System.out.println("Your term as leader has finished!");
         System.out.println("The city has a total of " + bushels + " bushels.");
         System.out.println("The city owns " + acres + " acres.");
-        System.out.println("There are a total of " + totalCitizens + " citizens.");
+        System.out.println("There ware a total of " + totalPeopleThatCameYourCity + " citizens that came to your city.");
+        System.out.println("Sadly, you let " + totalPeopleThatHaveDied + " die");
 
 
+
+    }
+    public static void youHaveBeenExiled(){
+        System.out.println("You let too many people starve to death! You are now exiled!");
+        endTheGame();
     }
 
     public static void endTheGame () {
