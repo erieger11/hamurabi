@@ -151,6 +151,7 @@ public class EthansHammurabi {         // must save in a file named Hammurabi.ja
         }
     }
 
+
     public static void calculatingAcresCost(){
         if (years >=1 ) {
             randomCost = random.nextInt(24-17) + 17;
