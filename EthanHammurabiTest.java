@@ -59,7 +59,7 @@ public class EthanHammurabiTest {
     }
 
     @Test
-    public void testUprising_UprisingOccurs() {
+    public void testUprising() {
         EthansHammurabi.totalCitizens = 100;
         EthansHammurabi.peopleThatHaveStarvedToDeath = 50; // Above uprising threshold
         EthansHammurabi.uprising();
